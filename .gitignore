@@ -1,0 +1,5 @@
+backend/.venv/
+backend/database.db
+.env
+.vscode/
+.DS_Store
