@@ -9,5 +9,5 @@ from backend.app.services.auth import login
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/login", response_model=Token)
-def login_route(session: SessionDep, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+async def login_route(session: SessionDep, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     return login(session=session, email=form_data.username, password=form_data.password)  

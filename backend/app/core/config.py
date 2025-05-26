@@ -14,5 +14,6 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_TTL_MINUTES: int = 0
     REFRESH_TOKEN_TTL_DAYS: int = 0
     SQLALCHEMY_DATABASE_URI: str = f"sqlite:///{BASE_DIR}/database.db"
+    UPLOAD_DIR: str = f"{BASE_DIR}/uploads"
 
 settings = Settings()    
