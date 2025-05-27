@@ -10,6 +10,8 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    AUDIENCE: str = ""
+    BASE_URL: str = ""
     SECRET_KEY: str = ""
     ACCESS_TOKEN_TTL_MINUTES: int = 0
     REFRESH_TOKEN_TTL_DAYS: int = 0

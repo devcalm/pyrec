@@ -22,7 +22,7 @@ def login(*, session: Session, email: str, password: str) -> Token:
         raise unauthorized_exception("Incorrect email or password")
     elif not user.is_active:
         raise unauthorized_exception("Inactive user")
-    return create_tokens(sub=user.email, role=user.role)
+    return create_tokens(user)
 
 def unauthorized_exception(detail: str) -> HTTPException: 
     return HTTPException(
