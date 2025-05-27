@@ -1,15 +1,18 @@
 import sys
+import asyncio
 import getpass
 from pydantic import BaseModel, EmailStr, ValidationError
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession 
 from app.core.db import engine
 from app.models import User, Role
+from app.deps import async_session
 from app.services.security import hash_password
 
 class EmailCheck(BaseModel):
     email: EmailStr
 
-def main():
+async def main():
     email_input:str = input("Enter email: ").strip()
     try:
         email_check = EmailCheck(email=email_input) 
@@ -39,8 +42,10 @@ def main():
         print("❌ Passwords do not match.")
         sys.exit(1)
 
-    with Session(engine) as session:
-        user_exists = session.exec(select(User).where(User.email == email_check.email)).first()
+    async with async_session() as session:
+        result = await session.exec(select(User).where(User.email == email_check.email))
+        user_exists = result.first()
+
         if user_exists:
             print("❌ User with this email already exists.")
             sys.exit(1)
@@ -53,10 +58,10 @@ def main():
         )
 
         session.add(new_user)
-        session.commit()
-        session.refresh(new_user)
+        await session.commit()
+        await session.refresh(new_user)
 
         print(f"✅ User created with ID {new_user.id}")     
 
 if __name__ == "__main__":
-    main()        
+   asyncio.run(main())     

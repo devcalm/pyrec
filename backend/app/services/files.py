@@ -3,6 +3,9 @@ import uuid
 import os
 import aiofiles
 from app.core.config import settings
+from app.deps import SessionDep
+from app.models import File
+from sqlmodel.ext.asyncio.session import AsyncSession 
 
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png"}
 
@@ -28,10 +31,11 @@ async def upload_images(files: list[UploadFile]) -> list[str]:
    
     return saved_files
 
-async def save_images_in_db(names: list[str]):
-    pass
+async def save_images_in_db(*, user_id: int, names: list[str], session: AsyncSession):
+    files = [File(name=name, owner_id=user_id) for name in names]
+    session.add_all(files)
+    await session.commit()
 
 def _generate_uuid_file_name(filename: str) -> str:
     _, ext = os.path.splitext(filename)
     return f"{uuid.uuid4().hex}{ext}"
-    

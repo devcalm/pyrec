@@ -12,14 +12,17 @@ class UserBase(SQLModel):
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     is_active: bool = True
     role: Role = Role.USER
+    hashed_password: str
 
 class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    hashed_password: str
 
 class UserCreate(SQLModel):
     email: str
     password: str
+ 
+class UserRead(UserBase):
+    id: int
 
 class File(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
